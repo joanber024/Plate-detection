@@ -12,8 +12,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 from typing import Tuple
 
-PATH_TO_ORIGINAL_IMAGE_DIRECTORY = "../Results/cropped_results"
-PATH_TO_RESULT_IMAGE_DIRECTORY = "../Results/binarized"
+PATH_TO_ORIGINAL_IMAGE_DIRECTORY = "../CharactersPlate"
+PATH_TO_RESULT_IMAGE_DIRECTORY = "../Results/characters_plate"
 WINDOW_SIZE = 1000
 SHOW_RESULTS = False
 
