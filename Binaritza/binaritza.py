@@ -12,8 +12,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 from typing import Tuple
 
-PATH_TO_ORIGINAL_IMAGE_DIRECTORY = "../CharactersPlate"
-PATH_TO_RESULT_IMAGE_DIRECTORY = "../Results/characters_plate"
+PATH_TO_ORIGINAL_IMAGE_DIRECTORY = "../Results/cropped_results"
+PATH_TO_RESULT_IMAGE_DIRECTORY = "../Results/binarized"
 WINDOW_SIZE = 1000
 SHOW_RESULTS = False
 
@@ -21,6 +21,10 @@ SHOW_RESULTS = False
 def to_gray(image: np.array) -> np.array:
     # return 0.114 * image[:, :, 0] + 0.587 * image[:, :, 1] + 0.299 * image[:, :, 2]
     return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+
+def to_hsv(image: np.array) -> np.array:
+    return cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
 
 def blackhat(image: np.array, kernel_size: Tuple[int, int]) -> np.array:
@@ -123,9 +127,15 @@ def process_image(original_image: np.array) -> np.array:
     
     # return dialted_image_3
     
-    gray_image = to_gray(original_image)
+    # gray_image = to_gray(original_image)
     
-    blured_image = gaussian_blur(gray_image, (5, 5))
+    # original_image[:, :, 1] = 0.1 * original_image[:, :, 1]
+    
+    hsv_image = to_hsv(original_image)[:, :, 2]
+    
+    # show_image_on_window(hsv_image, "HSV")
+    
+    blured_image = gaussian_blur(hsv_image, (5, 5))
     
     threshold_image = otsu_threshold(blured_image, 0, 255)
     
