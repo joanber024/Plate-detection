@@ -27,7 +27,7 @@ def read_image(path: str, name: str) -> np.array:
         Numpy array representing the image.
 
     """
-    return cv2.imread(os.ath.join(path, name))
+    return cv2.imread(os.path.join(path, name))
 
 
 def save_image(image: np.array, path: str, name: str) -> bool:
