@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 
 
-from Typing import List
+from typing import List
 
 
 def __filter_contours(image: np.array):

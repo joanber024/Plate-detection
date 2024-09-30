@@ -22,7 +22,7 @@ SHOW_RESULTS = False
 FILE_REGEX_PATTERN = re.compile(r"(?:\.[a-zA-Z0-9]+$)")
 ACCEPTED_IMAGE_FORMATS = (".png", ".jpg", ".jpge")
 
-CROPPER_MODEL_PATH = "best_model_1.pt"
+CROPPER_MODEL_PATH = "model.pt"
 
 
 def main():
@@ -32,7 +32,7 @@ def main():
     Raises
     ------
     FileNotFoundError
-        If there is a problem finding the images files..
+        If there is a problem finding the images files.
 
     Returns
     -------

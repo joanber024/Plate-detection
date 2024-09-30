@@ -13,7 +13,7 @@ class Cropper():
     __slots__ = ("__model")
 
     def __init__(self, model: str):
-        self.__model = YOLO("best_model_1.pt")
+        self.__model = YOLO(model)
 
     def crop_image(self, image: np.array) -> np.array:
         """
