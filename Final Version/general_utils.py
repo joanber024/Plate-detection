@@ -2,7 +2,7 @@
 """
 Created on Fri Sep 27 12:50:37 2024
 
-@author: JoelT
+@author: Joel Tapia Salvador
 """
 
 import os
@@ -16,18 +16,23 @@ def read_image(path: str, name: str) -> np.array:
 
     Parameters
     ----------
-    path : str
+    path : string
         Path to the image file.
-    name : str
+    name : string
         Name of the image file.
 
     Returns
     -------
-    numpy.array
+    numpy array
         Numpy array representing the image.
 
     """
-    return cv2.imread(os.path.join(path, name))
+    full_file_name = os.path.join(path, name)
+    if not os.path.exists(full_file_name):
+        raise FileNotFoundError(f'"{full_file_name}" path does not exist.')
+    if not os.path.isfile(full_file_name):
+        raise FileNotFoundError(f'"{full_file_name}" is not a file.')
+    return cv2.imread(full_file_name)
 
 
 def save_image(image: np.array, path: str, name: str) -> bool:
@@ -36,11 +41,11 @@ def save_image(image: np.array, path: str, name: str) -> bool:
 
     Parameters
     ----------
-    image : numpy.array
+    image : numpy array
         Numpy array representing the image.
-    path : str
+    path : string
         Path to the image file.
-    name : str
+    name : string
         Nome of the image file.
 
     Returns
@@ -49,16 +54,12 @@ def save_image(image: np.array, path: str, name: str) -> bool:
         If the funtion was able to save the image or not.
 
     """
-    try:
-        if not os.path.isdir(path):
-            os.mkdir(path)
+    if not os.path.isdir(path):
+        os.mkdir(path)
 
-        cv2.imwrite(os.path.join(path, name), image)
+    cv2.imwrite(os.path.join(path, name), image)
 
-        return True
-
-    except:  # pylint: disable=bare-except
-        return False
+    return True
 
 
 def show_image_on_window(image: np.array, window_name: str = "Image",
@@ -68,11 +69,11 @@ def show_image_on_window(image: np.array, window_name: str = "Image",
 
     Parameters
     ----------
-    image : numpy.array
+    image : numpy array
         Numpy array representing the image.
-    window_name : str, optional
+    window_name : string, optional
         Name the window will have. The default is "Image".
-    window_size : int, optional
+    window_size : integer, optional
         Max size of the window in pixels. The default is 1000 pixels.
 
     Returns
