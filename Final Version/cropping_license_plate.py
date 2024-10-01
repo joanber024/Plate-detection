@@ -6,6 +6,7 @@ Created on Mon Sep 30 13:33:56 2024
 """
 import numpy as np
 
+from typing import List
 from ultralytics import YOLO
 
 
@@ -14,6 +15,15 @@ class Cropper():
 
     def __init__(self, model: str):
         self.__model = YOLO(model)
+
+    def __choose_best_result(self, results: List):
+        if len(results) == 1:
+            return results[0]
+        else:
+            raise NotImplementedError("Not implemented yet.")
+
+    def __get_results(self, image: np.array) -> List:
+        return self.__model(image)
 
     def crop_image(self, image: np.array) -> np.array:
         """
@@ -30,7 +40,9 @@ class Cropper():
             Image with the cropped license plate represented as a numpy array.
 
         """
-        result = self.__model(image)
+        results = self.__get_results(image)
+
+        result = self.__choose_best_result(results)
 
         boxes = result.boxes
         bounding_box = np.array(boxes.xyxy, dtype='int32')[0]  # Coordinates
