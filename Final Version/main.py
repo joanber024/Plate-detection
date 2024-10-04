@@ -5,14 +5,9 @@ Created on Mon Sep 30 11:32:50 2024
 @author: Joel Tapia Salvador
 """
 import os
-import re
 
-
-from binarise_image import binarise
-from cropping_license_plate import Cropper
-from general_utils import read_image, remove_directory, save_image, show_image_on_window
-from segment_characters import get_segmented_characters
-
+from general_utils import remove_directory
+from license_plate_reader import LicensePlateReader
 
 PATH_TO_ORIGINAL_IMAGE_DIRECTORY = os.path.join("..", "Lateral")
 PATH_TO_RESULT_IMAGE_DIRECTORY = os.path.join("..", "Results", "Final")
@@ -21,10 +16,7 @@ WINDOW_SIZE = 1000
 SAVE_RESULTS = True
 SHOW_RESULTS = False
 
-FILE_REGEX_PATTERN = re.compile(r"(?:\.[a-zA-Z0-9]+$)")
-ACCEPTED_IMAGE_FORMATS = (".png", ".jpg", ".jpge")
-
-CROPPER_MODEL_PATH = "model.pt"
+CROPPER_MODEL_PATH = os.path.join(".", "model.pt")
 
 
 def main():
@@ -49,8 +41,10 @@ def main():
         if len(os.listdir(PATH_TO_RESULT_IMAGE_DIRECTORY)):
 
             while True:
-                print('\33[31m' + f'"{PATH_TO_RESULT_IMAGE_DIRECTORY}" has files already.\n Continue and ' +
-                      '\33[4m' + 'delete' + '\33[0m\33[31m' + ' all files and directories in it?' + '\33[0m')
+                print('\33[31m' + f'"{PATH_TO_RESULT_IMAGE_DIRECTORY}" has ' +
+                      'files already.\n Continue and ' +
+                      '\33[4m' + 'delete' + '\33[0m\33[31m' +
+                      ' all files and directories in it?' + '\33[0m')
                 option = input('Choose "Yes" or "No": ').lower()
 
                 if option in ("no", "n", "-"):
@@ -63,63 +57,32 @@ def main():
 
                     break
 
-    cropper = Cropper(CROPPER_MODEL_PATH)
+    reader_license_plate = LicensePlateReader(CROPPER_MODEL_PATH,
+                                              PATH_TO_RESULT_IMAGE_DIRECTORY,
+                                              SAVE_RESULTS,
+                                              SHOW_RESULTS,
+                                              WINDOW_SIZE)
 
-    for file_name in os.listdir(PATH_TO_ORIGINAL_IMAGE_DIRECTORY):
+    list_of_files = os.listdir(PATH_TO_ORIGINAL_IMAGE_DIRECTORY)
 
-        file_format = FILE_REGEX_PATTERN.search(file_name).group()
+    license_plates = reader_license_plate.read_license_plates(list_of_files,
+                                                              PATH_TO_ORIGINAL_IMAGE_DIRECTORY)
 
-        if file_format not in ACCEPTED_IMAGE_FORMATS:
-            raise UserWarning(
-                f'"{file_format}" is not an accepted image format. ')
+    print(f'\n{test(list_of_files, license_plates) * 100}%')
 
-        original_image = read_image(
-            PATH_TO_ORIGINAL_IMAGE_DIRECTORY, file_name)
 
-        if SHOW_RESULTS:
-            show_image_on_window(original_image, file_name, WINDOW_SIZE)
+def test(list_of_files, license_plates):
 
-        cropped_license_plate = cropper.crop_image(original_image)
+    score = 0
 
-        if SAVE_RESULTS:
-            path = os.path.join(
-                PATH_TO_RESULT_IMAGE_DIRECTORY, "Cropped License Plate")
-            save_image(cropped_license_plate, path, file_name)
-            del path
+    if len(list_of_files) != len(license_plates):
+        return 0
 
-        if SHOW_RESULTS:
-            show_image_on_window(cropped_license_plate,
-                                 f"Cropped {file_name}", WINDOW_SIZE)
+    for license_plate in license_plates:
+        if license_plate == 7:
+            score += 1
 
-        binarised_license_plate = binarise(cropped_license_plate)
-
-        if SAVE_RESULTS:
-            path = os.path.join(
-                PATH_TO_RESULT_IMAGE_DIRECTORY, "Binarised License Plate")
-            save_image(binarised_license_plate, path, file_name)
-            del path
-
-        if SHOW_RESULTS:
-            show_image_on_window(binarised_license_plate,
-                                 f"Binarised {file_name}", WINDOW_SIZE)
-
-        segmented_characters = get_segmented_characters(
-            binarised_license_plate)
-
-        if SAVE_RESULTS:
-            for i in range(len(segmented_characters)):
-                path = os.path.join(
-                    PATH_TO_RESULT_IMAGE_DIRECTORY, "Segmented Characters",
-                    file_name)
-                save_image(segmented_characters[i], path, str(i) + file_format)
-                del path
-
-        if SHOW_RESULTS:
-            for i in range(len(segmented_characters)):
-                name_window = f"Character {
-                    i + 1}/{len(segmented_characters)} {file_name}"
-                show_image_on_window(segmented_characters[i],
-                                     name_window, WINDOW_SIZE)
+    return score / len(list_of_files)
 
 
 if __name__ == "__main__":

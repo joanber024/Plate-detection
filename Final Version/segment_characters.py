@@ -31,6 +31,13 @@ def __filter_contours(image: np.array):
         image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     filtered_contours = []
     height, width = image.shape
+
+    area_image = image.shape[0] * image.shape[1]
+
+    # print(area_image)
+
+    # print(len(contours))
+
     for c in contours:
         area = cv2.contourArea(c)
         x, y, w, h = cv2.boundingRect(c)
@@ -63,7 +70,12 @@ def get_segmented_characters(image: np.array) -> List[np.array]:
         character.
 
     """
+    # print(image.shape)
+
     f_conts = __filter_contours(image)
+
+    # print(len(f_conts))
+
     segmented_characters = []
     for c in f_conts:
         c = np.squeeze(c)
