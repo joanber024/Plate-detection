@@ -48,4 +48,13 @@ def fill_image(original_image: np.array) -> np.array:
         for value, perc in zip(values, percs):
             if(value == 255 and perc > 80):
                 original_image[i, :] = 0
+                
+    for j in range(original_image.shape[1]):
+        column = original_image[:, j]
+        values, freq = np.unique(column, return_counts=True)
+        percs = (freq / len(column)) * 100
+        for value, perc in zip(values, percs):
+            if(value == 255 and perc > 80):
+                original_image[:, j] = 0
+                
     return original_image

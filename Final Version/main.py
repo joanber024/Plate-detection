@@ -11,7 +11,7 @@ from general_utils import remove_directory
 from license_plate_reader import LicensePlateReader
 
 CROPPER_MODEL_PATH = os.path.join(".", "model.pt")
-PATH_TO_ORIGINAL_IMAGE_DIRECTORY = os.path.join("..", "Lateral")
+PATH_TO_ORIGINAL_IMAGE_DIRECTORY = os.path.join("..", "mat_espanyolas")
 PATH_TO_RESULT_IMAGE_DIRECTORY = os.path.join("..", "Results", "Final")
 WINDOW_SIZE = 1000
 
