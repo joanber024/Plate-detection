@@ -63,7 +63,12 @@ def __filter_contours(image: np.array):
                 prop = (ymax-ymin)/(xmax-xmin)
                 if (prop > 1.5 and prop < 7):
                     filtered_contours.append(c)
-    return crop_image, filtered_contours[::-1]
+
+    return crop_image, __order_contours(filtered_contours)
+
+
+def __order_contours(contours: List) -> List:
+    return sorted(contours, key=lambda c: cv2.boundingRect(c)[0])
 
 
 def get_segmented_characters(image: np.array) -> List[np.array]:
