@@ -53,9 +53,7 @@ def __filter_contours(image: np.array):
     for c in contours:
         area = cv2.contourArea(c)
         x, y, w, h = cv2.boundingRect(c)
-        if (x == 0 or y == 0 or x+w == width or y+h == height):
-            continue
-        else:
+        if not (x == 0 or y == 0 or x+w == width or y+h == height):
             if (area > 700 and area < 30000):
                 c = np.squeeze(c)
                 xmax, xmin = np.max(c[:, 0]), np.min(c[:, 0])

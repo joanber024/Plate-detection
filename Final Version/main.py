@@ -4,19 +4,20 @@ Created on Mon Sep 30 11:32:50 2024
 
 @author: Joel Tapia Salvador
 """
+import json
 import os
 
 from general_utils import remove_directory
 from license_plate_reader import LicensePlateReader
 
+CROPPER_MODEL_PATH = os.path.join(".", "model.pt")
 PATH_TO_ORIGINAL_IMAGE_DIRECTORY = os.path.join("..", "Lateral")
 PATH_TO_RESULT_IMAGE_DIRECTORY = os.path.join("..", "Results", "Final")
 WINDOW_SIZE = 1000
 
+PROCESS_PAST_FAILED_ONLY = False
 SAVE_RESULTS = True
 SHOW_RESULTS = False
-
-CROPPER_MODEL_PATH = os.path.join(".", "model.pt")
 
 
 def main():
@@ -62,8 +63,11 @@ def main():
                                               SAVE_RESULTS,
                                               SHOW_RESULTS,
                                               WINDOW_SIZE)
-
-    list_of_files = os.listdir(PATH_TO_ORIGINAL_IMAGE_DIRECTORY)
+    if PROCESS_PAST_FAILED_ONLY:
+        with open("failed.dat", "r") as file:
+            list_of_files = json.load(file)
+    else:
+        list_of_files = os.listdir(PATH_TO_ORIGINAL_IMAGE_DIRECTORY)
 
     license_plates = reader_license_plate.read_license_plates(list_of_files,
                                                               PATH_TO_ORIGINAL_IMAGE_DIRECTORY)
@@ -91,7 +95,7 @@ def test(list_of_files, license_plates):
             file.write(f'{score}\n')
 
         with open("failed.dat", "w") as file:
-            file.write(str(failed))
+            json.dump(failed, file)
 
     return score
 
