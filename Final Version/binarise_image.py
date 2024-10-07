@@ -35,12 +35,6 @@ def binarise(original_image: np.array) -> np.array:
     result_image = inverse(threshold_image)
     result_image = fill_image(result_image)
     
-    cv2.imshow('Image Window', result_image)
-
-    cv2.waitKey(0)
-    
-    cv2.destroyAllWindows()
-    
     
     return result_image
 

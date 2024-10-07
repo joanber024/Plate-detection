@@ -32,8 +32,9 @@ def __filter_contours(image: np.array):
     contours = []
 
     margin = 0
-
-    while len(contours) < 7:
+    crop_image = image
+    
+    while len(contours) < 7 and crop_image.size > 1000:
 
         crop_image = image[margin:height-margin, margin:width-margin]
 
@@ -41,10 +42,15 @@ def __filter_contours(image: np.array):
             crop_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         margin += 1
-
-
+    
     filtered_contours = []
+    
+    cv2.imshow('Image Window', crop_image)
 
+    cv2.waitKey(0)
+    
+    cv2.destroyAllWindows()
+    
     # area_image = height * width
 
     # print(area_image)
