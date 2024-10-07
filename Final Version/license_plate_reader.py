@@ -101,8 +101,7 @@ class LicensePlateReader():
 
             results[file_name] = num_segmented_characters
 
-            print(f'\nNumber Segmented Characters: {
-                  num_segmented_characters}')
+            print(f'\nNumber Segmented Characters: {num_segmented_characters}')
 
             if self.__save_results:
                 path = os.path.join(
@@ -122,8 +121,7 @@ class LicensePlateReader():
 
             if self.__show_results:
                 for i in range(num_segmented_characters):
-                    name_window = f"Character {
-                        i + 1}/{num_segmented_characters} {file_name}"
+                    name_window = f"Character {i + 1}/{num_segmented_characters} {file_name}"
                     show_image_on_window(segmented_characters[i],
                                          name_window, self.__window_size)
 

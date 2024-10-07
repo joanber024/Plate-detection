@@ -42,6 +42,7 @@ def __filter_contours(image: np.array):
 
         margin += 1
 
+
     filtered_contours = []
 
     # area_image = height * width
