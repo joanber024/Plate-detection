@@ -33,7 +33,7 @@ def __filter_contours(image: np.array):
 
     margin = 0
 
-    while len(contours) <= 1:
+    while len(contours) < 7:
 
         crop_image = image[margin:height-margin, margin:width-margin]
 

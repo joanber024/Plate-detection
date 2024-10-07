@@ -39,7 +39,7 @@ class LicensePlateReader():
     def read_license_plates(self,
                             list_of_files: List[str],
                             path_to_original_image_directory: str) -> List[str]:
-        result = []
+        results = {}
 
         for file_name in list_of_files:
 
@@ -99,7 +99,7 @@ class LicensePlateReader():
 
             num_segmented_characters = len(segmented_characters)
 
-            result.append(num_segmented_characters)
+            results[file_name] = num_segmented_characters
 
             print(f'\nNumber Segmented Characters: {
                   num_segmented_characters}')
@@ -127,4 +127,4 @@ class LicensePlateReader():
                     show_image_on_window(segmented_characters[i],
                                          name_window, self.__window_size)
 
-        return result
+        return results

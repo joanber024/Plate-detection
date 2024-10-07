@@ -75,15 +75,23 @@ def test(list_of_files, license_plates):
 
     cum_punt = 0
 
+    failed = []
+
     if not len(list_of_files) != len(license_plates):
-        for license_plate in license_plates:
+        for file_name, license_plate in license_plates.items():
             if license_plate == 7:
                 cum_punt += 1
+            else:
+                failed.append(file_name)
 
     score = cum_punt / len(list_of_files)
 
-    with open("result.dat", "a") as file:
-        file.write(f'{score}\n')
+    if SAVE_RESULTS:
+        with open("result.dat", "a") as file:
+            file.write(f'{score}\n')
+
+        with open("failed.dat", "w") as file:
+            file.write(str(failed))
 
     return score
 
