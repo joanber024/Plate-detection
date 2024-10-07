@@ -73,16 +73,19 @@ def main():
 
 def test(list_of_files, license_plates):
 
-    score = 0
+    cum_punt = 0
 
-    if len(list_of_files) != len(license_plates):
-        return 0
+    if not len(list_of_files) != len(license_plates):
+        for license_plate in license_plates:
+            if license_plate == 7:
+                cum_punt += 1
 
-    for license_plate in license_plates:
-        if license_plate == 7:
-            score += 1
+    score = cum_punt / len(list_of_files)
 
-    return score / len(list_of_files)
+    with open("result.dat", "a") as file:
+        file.write(f'{score}\n')
+
+    return score
 
 
 if __name__ == "__main__":

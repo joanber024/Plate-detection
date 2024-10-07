@@ -27,12 +27,24 @@ def __filter_contours(image: np.array):
         DESCRIPTION.
 
     """
-    contours, hierachy = cv2.findContours(
-        image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    filtered_contours = []
     height, width = image.shape
 
-    area_image = image.shape[0] * image.shape[1]
+    contours = []
+
+    margin = 0
+
+    while len(contours) <= 1:
+
+        crop_image = image[margin:height-margin, margin:width-margin]
+
+        contours, hierachy = cv2.findContours(
+            crop_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        margin += 1
+
+    filtered_contours = []
+
+    # area_image = height * width
 
     # print(area_image)
 
@@ -51,7 +63,7 @@ def __filter_contours(image: np.array):
                 prop = (ymax-ymin)/(xmax-xmin)
                 if (prop > 1.5 and prop < 7):
                     filtered_contours.append(c)
-    return filtered_contours[::-1]
+    return crop_image, filtered_contours[::-1]
 
 
 def get_segmented_characters(image: np.array) -> List[np.array]:
@@ -72,7 +84,7 @@ def get_segmented_characters(image: np.array) -> List[np.array]:
     """
     # print(image.shape)
 
-    f_conts = __filter_contours(image)
+    crop_image, f_conts = __filter_contours(image)
 
     # print(len(f_conts))
 
@@ -81,5 +93,5 @@ def get_segmented_characters(image: np.array) -> List[np.array]:
         c = np.squeeze(c)
         xmax, xmin = np.max(c[:, 0]), np.min(c[:, 0])
         ymax, ymin = np.max(c[:, 1]), np.min(c[:, 1])
-        segmented_characters.append(image[ymin:ymax, xmin:xmax])
+        segmented_characters.append(crop_image[ymin:ymax, xmin:xmax])
     return segmented_characters
