@@ -11,9 +11,9 @@ from general_utils import remove_directory
 from license_plate_reader import LicensePlateReader
 
 CROPPER_MODEL_PATH = os.path.join(".", "model.pt")
-PATH_TO_ORIGINAL_IMAGE_DIRECTORY = os.path.join("..", "mat_espanyolas")
+PATH_TO_ORIGINAL_IMAGE_DIRECTORY = os.path.join("..", "mat_españolas")
 PATH_TO_RESULT_IMAGE_DIRECTORY = os.path.join(
-    "..", "Results", "Final", "mat_espanyolas")
+    "..", "Results", "Final", "mat_españolas")
 WINDOW_SIZE = 1000
 
 PROCESS_PAST_FAILED_ONLY = False
@@ -39,25 +39,26 @@ def main():
         raise FileNotFoundError(
             f'"{PATH_TO_ORIGINAL_IMAGE_DIRECTORY}" is not a directory.')
 
-    if os.path.isdir(PATH_TO_RESULT_IMAGE_DIRECTORY):
-        if len(os.listdir(PATH_TO_RESULT_IMAGE_DIRECTORY)):
+    if SAVE_RESULTS:
+        if os.path.isdir(PATH_TO_RESULT_IMAGE_DIRECTORY):
+            if len(os.listdir(PATH_TO_RESULT_IMAGE_DIRECTORY)):
 
-            while True:
-                print('\33[31m' + f'"{PATH_TO_RESULT_IMAGE_DIRECTORY}" has ' +
-                      'files already.\n Continue and ' +
-                      '\33[4m' + 'delete' + '\33[0m\33[31m' +
-                      ' all files and directories in it?' + '\33[0m')
-                option = input('Choose "Yes" or "No": ').lower()
+                while True:
+                    print('\33[31m' + f'"{PATH_TO_RESULT_IMAGE_DIRECTORY}" ' +
+                          'has files already.\n Continue and ' +
+                          '\33[4m' + 'delete' + '\33[0m\33[31m' +
+                          ' all files and directories in it?' + '\33[0m')
+                    option = input('Choose "Yes" or "No": ').lower()
 
-                if option in ("no", "n", "-"):
-                    print('\33[32m' + 'Exiting' + '\33[0m')
-                    raise KeyboardInterrupt("User canceled")
+                    if option in ("no", "n", "-"):
+                        print('\33[32m' + 'Exiting' + '\33[0m')
+                        raise KeyboardInterrupt("User canceled")
 
-                if option in ("yes", "y", "+"):
-                    print('\33[32m' + 'Continuing' + '\33[0m')
-                    remove_directory(PATH_TO_RESULT_IMAGE_DIRECTORY)
+                    if option in ("yes", "y", "+"):
+                        print('\33[32m' + 'Continuing' + '\33[0m')
+                        remove_directory(PATH_TO_RESULT_IMAGE_DIRECTORY)
 
-                    break
+                        break
 
     reader_license_plate = LicensePlateReader(CROPPER_MODEL_PATH,
                                               PATH_TO_RESULT_IMAGE_DIRECTORY,
@@ -73,7 +74,7 @@ def main():
     license_plates = reader_license_plate.read_license_plates(list_of_files,
                                                               PATH_TO_ORIGINAL_IMAGE_DIRECTORY)
 
-    print(f'\n{test(list_of_files, license_plates) * 100}%')
+    print(f'\n{test(list_of_files, license_plates):%}')
 
 
 def test(list_of_files, license_plates):

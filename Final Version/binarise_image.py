@@ -27,8 +27,8 @@ def binarise(original_image: np.array) -> np.array:
 
     """
 
-    original_image[original_image[:, :, 0] > 200 &
-                   original_image[:, :, 1] < 50 & original_image[:, :, 2] < 50] = 0
+    # original_image[original_image[:, :, 0] > 200 &
+    # original_image[:, :, 1] < 50 & original_image[:, :, 2] < 50] = 255
 
     hsv_image = to_hsv(original_image)[:, :, 2]
 

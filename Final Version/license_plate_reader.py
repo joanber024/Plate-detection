@@ -104,24 +104,39 @@ class LicensePlateReader():
             print(f'\nNumber Segmented Characters: {num_segmented_characters}')
 
             if self.__save_results:
+
+                title = ''
+
+                if num_segmented_characters == 7:
+                    classification = "Exactly 7"
+
+                elif num_segmented_characters < 7:
+                    classification = "Less 7"
+
+                elif num_segmented_characters > 7:
+                    classification = "More 7"
+
                 path = os.path.join(
                     self.__path_to_result_image_directory,
-                    "Segmented Characters",
+                    "Segmented Characters", classification,
                     file_name)
 
                 create_path(path)
 
                 for i in range(num_segmented_characters):
+                    if num_segmented_characters == 7:
+                        title = f' [{file_name[i]}]'
                     save_image(
                         segmented_characters[i],
-                        path,
-                        f'{i + 1} of {num_segmented_characters}' + file_format)
+                        path, f'{i + 1} of {num_segmented_characters}' +
+                        title + file_format)
 
-                del path
+                del path, classification, title
 
             if self.__show_results:
                 for i in range(num_segmented_characters):
-                    name_window = f"Character {i + 1}/{num_segmented_characters} {file_name}"
+                    name_window = f"Character {
+                        i + 1}/{num_segmented_characters} {file_name}"
                     show_image_on_window(segmented_characters[i],
                                          name_window, self.__window_size)
 
