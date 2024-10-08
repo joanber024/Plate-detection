@@ -71,6 +71,9 @@ class Cropper():
 
         bounding_box = self.__choose_best_result(bounding_boxes, image)
 
+        if bounding_box is None:
+            return image
+
         # Coordinates
         cropped_image = image[bounding_box[1]:bounding_box[3],
                               bounding_box[0]:bounding_box[2]]

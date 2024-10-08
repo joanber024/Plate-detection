@@ -56,7 +56,7 @@ def __filter_contours(image: np.array):
         if not (x == 0 or y == 0 or x+w == width or y+h == height):
             area = cv2.contourArea(c)
             area_proportions = area / area_image
-            if (area_proportions > 0.003 and area_proportions < 0.09):
+            if (area_proportions > 0.003 and area_proportions < 0.1):
                 c = np.squeeze(c)
                 xmax, xmin = np.max(c[:, 0]), np.min(c[:, 0])
                 ymax, ymin = np.max(c[:, 1]), np.min(c[:, 1])

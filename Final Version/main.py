@@ -86,7 +86,7 @@ def test(list_of_files, license_plates):
         for file_name, license_plate in license_plates.items():
             if license_plate == 7:
                 cum_punt += 1
-            else:
+            elif license_plate > 7:
                 failed.append(file_name)
 
     score = cum_punt / len(list_of_files)

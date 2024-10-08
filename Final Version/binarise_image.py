@@ -26,6 +26,10 @@ def binarise(original_image: np.array) -> np.array:
         Binarised image represented as numpy array.
 
     """
+
+    original_image[original_image[:, :, 0] > 200 &
+                   original_image[:, :, 1] < 50 & original_image[:, :, 2] < 50] = 0
+
     hsv_image = to_hsv(original_image)[:, :, 2]
 
     blured_image = gaussian_blur(hsv_image, (5, 5))
@@ -45,7 +49,7 @@ def __fill_image(original_image: np.array) -> np.array:
         # Calcular el porcentaje de aparición de cada valor
         percs = (freq / len(row)) * 100
         for value, perc in zip(values, percs):
-            if (value == 255 and perc > 80):
+            if (value == 255 and perc > 90):
                 original_image[i, :] = 0
 
     for j in range(original_image.shape[1]):
@@ -53,7 +57,7 @@ def __fill_image(original_image: np.array) -> np.array:
         values, freq = np.unique(column, return_counts=True)
         percs = (freq / len(column)) * 100
         for value, perc in zip(values, percs):
-            if (value == 255 and perc > 80):
+            if (value == 255 and perc > 90):
                 original_image[:, j] = 0
 
     return original_image
