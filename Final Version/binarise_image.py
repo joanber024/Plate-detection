@@ -33,28 +33,27 @@ def binarise(original_image: np.array) -> np.array:
     threshold_image = otsu_threshold(blured_image, 0, 255)
 
     result_image = inverse(threshold_image)
-    result_image = fill_image(result_image)
-    
-    
+    result_image = __fill_image(result_image)
+
     return result_image
 
 
-def fill_image(original_image: np.array) -> np.array:
+def __fill_image(original_image: np.array) -> np.array:
     for i, row in enumerate(original_image):
         values, freq = np.unique(row, return_counts=True)
-        
+
         # Calcular el porcentaje de aparición de cada valor
         percs = (freq / len(row)) * 100
         for value, perc in zip(values, percs):
-            if(value == 255 and perc > 80):
+            if (value == 255 and perc > 80):
                 original_image[i, :] = 0
-                
+
     for j in range(original_image.shape[1]):
         column = original_image[:, j]
         values, freq = np.unique(column, return_counts=True)
         percs = (freq / len(column)) * 100
         for value, perc in zip(values, percs):
-            if(value == 255 and perc > 80):
+            if (value == 255 and perc > 80):
                 original_image[:, j] = 0
-                
+
     return original_image

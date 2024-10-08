@@ -33,7 +33,7 @@ def __filter_contours(image: np.array):
 
     margin = 0
     crop_image = image
-    
+
     while len(contours) < 7 and crop_image.size > 1000:
 
         crop_image = image[margin:height-margin, margin:width-margin]
@@ -42,26 +42,21 @@ def __filter_contours(image: np.array):
             crop_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         margin += 1
-    
-    filtered_contours = []
-    
-    cv2.imshow('Image Window', crop_image)
 
-    cv2.waitKey(0)
-    
-    cv2.destroyAllWindows()
-    
-    # area_image = height * width
+    filtered_contours = []
+
+    area_image = height * width
 
     # print(area_image)
 
     # print(len(contours))
 
     for c in contours:
-        area = cv2.contourArea(c)
         x, y, w, h = cv2.boundingRect(c)
         if not (x == 0 or y == 0 or x+w == width or y+h == height):
-            if (area > 700 and area < 30000):
+            area = cv2.contourArea(c)
+            area_proportions = area / area_image
+            if (area_proportions > 0.003 and area_proportions < 0.09):
                 c = np.squeeze(c)
                 xmax, xmin = np.max(c[:, 0]), np.min(c[:, 0])
                 ymax, ymin = np.max(c[:, 1]), np.min(c[:, 1])
