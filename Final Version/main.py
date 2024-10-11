@@ -14,6 +14,7 @@ CROPPER_MODEL_PATH = os.path.join(".", "model.pt")
 PATH_TO_ORIGINAL_IMAGE_DIRECTORY = os.path.join("..", "mat_españolas")
 PATH_TO_RESULT_IMAGE_DIRECTORY = os.path.join(
     "..", "Results", "Final", "mat_españolas")
+PATH_TO_MODEL = os.path.join('..', 'Classifier', 'svm_model.pkl')
 WINDOW_SIZE = 1000
 
 PROCESS_PAST_FAILED_ONLY = False
@@ -64,7 +65,8 @@ def main():
                                               PATH_TO_RESULT_IMAGE_DIRECTORY,
                                               SAVE_RESULTS,
                                               SHOW_RESULTS,
-                                              WINDOW_SIZE)
+                                              WINDOW_SIZE, 
+                                              PATH_TO_MODEL)
     if PROCESS_PAST_FAILED_ONLY:
         with open("failed.dat", "r") as file:
             list_of_files = json.load(file)

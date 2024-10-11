@@ -12,20 +12,24 @@ from binarise_image import binarise
 from cropping_license_plate import Cropper
 from general_utils import create_path, read_image, save_image, show_image_on_window
 from segment_characters import get_segmented_characters
+from Classifier_SVM import classify_characters
 
 
 class LicensePlateReader():
 
     __slots__ = ("__accepted_image_formats", "__cropper",
                  "__file_regex_pattern", "__path_to_result_image_directory",
-                 "__save_results", "__show_results", "__window_size")
+                 "__save_results", "__show_results", "__window_size",
+                 "__model_filename", "__classify_characters")
 
     def __init__(self,
                  cropper_model_path: str,
                  path_to_result_image_directory: str = ".",
                  save_results: bool = False,
                  show_results=False,
-                 window_size: int = 1000):
+                 window_size: int = 1000,
+                 model_filename: str = None,
+                 class_characters = True):
 
         self.__accepted_image_formats = (".png", ".jpg", ".jpge")
         self.__file_regex_pattern = re.compile(r"(?:\.[a-zA-Z0-9]+$)")
@@ -35,6 +39,9 @@ class LicensePlateReader():
         self.__save_results = save_results
         self.__show_results = show_results
         self.__window_size = window_size
+        self.__model_filename = model_filename 
+        self.__classify_characters = class_characters
+
 
     def read_license_plates(self,
                             list_of_files: List[str],
@@ -135,9 +142,13 @@ class LicensePlateReader():
 
             if self.__show_results:
                 for i in range(num_segmented_characters):
-                    name_window = f"Character {
-                        i + 1}/{num_segmented_characters} {file_name}"
+                    name_window = f"Character {i + 1}/{num_segmented_characters} {file_name}"
                     show_image_on_window(segmented_characters[i],
                                          name_window, self.__window_size)
+            
+            if self.__classify_characters:
+                complete_plate = classify_characters(segmented_characters, self.__model_filename)
+                print(complete_plate)
+                
 
         return results
