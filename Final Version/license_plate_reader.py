@@ -7,6 +7,7 @@ Created on Fri Oct  4 22:34:25 2024
 import os
 import re
 
+import json
 from typing import List
 from binarise_image import binarise
 from cropping_license_plate import Cropper
@@ -20,7 +21,7 @@ class LicensePlateReader():
     __slots__ = ("__accepted_image_formats", "__cropper",
                  "__file_regex_pattern", "__path_to_result_image_directory",
                  "__save_results", "__show_results", "__window_size",
-                 "__model_filename", "__classify_characters")
+                 "__model_filename", "__classify_characters", "characters_dict")
 
     def __init__(self,
                  cropper_model_path: str,
@@ -41,13 +42,13 @@ class LicensePlateReader():
         self.__window_size = window_size
         self.__model_filename = model_filename 
         self.__classify_characters = class_characters
+        self.characters_dict = {}
 
 
     def read_license_plates(self,
                             list_of_files: List[str],
                             path_to_original_image_directory: str) -> List[str]:
         results = {}
-
         for file_name in list_of_files:
 
             file_format = self.__file_regex_pattern.search(file_name).group()
@@ -110,6 +111,18 @@ class LicensePlateReader():
 
             print(f'\nNumber Segmented Characters: {num_segmented_characters}')
 
+
+            if self.__show_results:
+                for i in range(num_segmented_characters):
+                    name_window = f"Character {i + 1}/{num_segmented_characters} {file_name}"
+                    show_image_on_window(segmented_characters[i],
+                                         name_window, self.__window_size)
+            
+            if(num_segmented_characters == 7):
+                if self.__classify_characters:
+                    complete_plate = classify_characters(segmented_characters, self.__model_filename)
+                    print('PLATE RECOGNISED:', complete_plate)
+            
             if self.__save_results:
 
                 title = ''
@@ -137,18 +150,10 @@ class LicensePlateReader():
                         segmented_characters[i],
                         path, f'{i + 1} of {num_segmented_characters}' +
                         title + file_format)
-
+                    
+                self.characters_dict[file_name] = complete_plate
                 del path, classification, title
 
-            if self.__show_results:
-                for i in range(num_segmented_characters):
-                    name_window = f"Character {i + 1}/{num_segmented_characters} {file_name}"
-                    show_image_on_window(segmented_characters[i],
-                                         name_window, self.__window_size)
-            
-            if self.__classify_characters:
-                complete_plate = classify_characters(segmented_characters, self.__model_filename)
-                print(complete_plate)
-                
-
+        with open(os.path.join('..','Results', 'Final', 'char_results.json'), 'w') as file:
+            json.dump(self.characters_dict, file)
         return results

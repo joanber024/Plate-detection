@@ -10,8 +10,12 @@ import os
 from general_utils import remove_directory
 from license_plate_reader import LicensePlateReader
 
+import warnings
+
+warnings.filterwarnings("ignore")
+
 CROPPER_MODEL_PATH = os.path.join(".", "model.pt")
-PATH_TO_ORIGINAL_IMAGE_DIRECTORY = os.path.join("..", "mat_españolas")
+PATH_TO_ORIGINAL_IMAGE_DIRECTORY = os.path.join("..", "Lateral")
 PATH_TO_RESULT_IMAGE_DIRECTORY = os.path.join(
     "..", "Results", "Final", "mat_españolas")
 PATH_TO_MODEL = os.path.join('..', 'Classifier', 'svm_model.pkl')
@@ -75,6 +79,7 @@ def main():
 
     license_plates = reader_license_plate.read_license_plates(list_of_files,
                                                               PATH_TO_ORIGINAL_IMAGE_DIRECTORY)
+    
 
     print(f'\n{test(list_of_files, license_plates):%}')
 
