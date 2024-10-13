@@ -12,6 +12,7 @@ from ultralytics import YOLO
 
 
 class Cropper():
+
     __slots__ = ("__name_model", "__model")
 
     def __init__(self, path_model: str):
@@ -72,7 +73,9 @@ class Cropper():
         bounding_box = self.__choose_best_result(bounding_boxes, image)
 
         if bounding_box is None:
-            return image
+            cropped_image = image.copy()
+            cropped_image[:, :, :] = 0
+            return cropped_image
 
         # Coordinates
         cropped_image = image[bounding_box[1]:bounding_box[3],
