@@ -100,3 +100,9 @@ def get_segmented_characters(image: np.array) -> List[np.array]:
         ymax, ymin = np.max(c[:, 1]), np.min(c[:, 1])
         segmented_characters.append(crop_image[ymin:ymax, xmin:xmax])
     return segmented_characters
+
+
+if __name__ == "__main__":
+    print(
+        '\33[31m' + 'You are executing a module file, execute main instead.'
+        + '\33[0m')

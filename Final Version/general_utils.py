@@ -66,7 +66,8 @@ def read_image(path: str, name: str) -> np.array:
 def remove_directory(path: str):
     """
     Remove a directory and all it's files.
-    Recursively removes all child directories and their files too. To be able 
+
+    Recursively removes all child directories and their files too. To be able
     to delete the parent directory.
 
     Parameters
@@ -141,3 +142,9 @@ def show_image_on_window(image: np.array, window_name: str = "Image",
     cv2.imshow(window_name, image)
     cv2.waitKey(0)
     cv2.destroyWindow(window_name)
+
+
+if __name__ == "__main__":
+    print(
+        '\33[31m' + 'You are executing a module file, execute main instead.'
+        + '\33[0m')

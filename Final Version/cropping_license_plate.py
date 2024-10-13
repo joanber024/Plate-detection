@@ -92,3 +92,9 @@ class Cropper():
 
         """
         return self.__name_model
+
+
+if __name__ == "__main__":
+    print(
+        '\33[31m' + 'You are executing a module file, execute main instead.'
+        + '\33[0m')

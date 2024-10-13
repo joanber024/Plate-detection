@@ -61,3 +61,9 @@ def __fill_image(original_image: np.array) -> np.array:
                 original_image[:, j] = 0
 
     return original_image
+
+
+if __name__ == "__main__":
+    print(
+        '\33[31m' + 'You are executing a module file, execute main instead.'
+        + '\33[0m')

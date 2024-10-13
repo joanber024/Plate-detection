@@ -11,6 +11,12 @@ import numpy as np
 from typing import Tuple
 
 
+def binary_threshold(image: np.array, threshold: int, max_value: int) -> np.array:
+    _, result = cv2.threshold(
+        image, threshold, max_value, cv2.THRESH_BINARY)
+    return result
+
+
 def gaussian_blur(image: np.array, kernel_size: Tuple[int, int],
                   mu: int = 0) -> np.array:
     """
@@ -77,6 +83,54 @@ def otsu_threshold(image: np.array, threshold: int, max_value: int) -> np.array:
     return result
 
 
+def resize(image: np.array, height: int | None = None, width: int | None = None) -> np.array:
+    """
+    Resize image.
+
+    Parameters
+    ----------
+    image : numpy array
+        Image to resize represented as numpy array.
+    height : integer or None, optional
+        Height of the resulting image. If None keeps the original one.
+        The default is None.
+    width : integer or None, optional
+        Width of the resulting image. If none keeps the original one.
+        The default is None.
+
+    Returns
+    -------
+    numpy array
+        DESCRIPTION.
+
+    """
+    if height is None:
+        height = image.shape[0]
+
+    if width is None:
+        width = image.shape[1]
+
+    return cv2.resize(image, (height, width))
+
+
+def to_gray(image: np.array) -> np.array:
+    """
+    Change the colour space of an image from RGB to Gray.
+
+    Parameters
+    ----------
+    image : numpy array
+        Image to get converted to Gray colour space represented as numpy array.
+
+    Returns
+    -------
+    numpy array
+        Image in Gray colour space represented as numpy array.
+
+    """
+    return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+
 def to_hsv(image: np.array) -> np.array:
     """
     Change the colour space of an image from RGB to HSV.
@@ -93,3 +147,9 @@ def to_hsv(image: np.array) -> np.array:
 
     """
     return cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+
+if __name__ == "__main__":
+    print(
+        '\33[31m' + 'You are executing a module file, execute main instead.'
+        + '\33[0m')
