@@ -12,9 +12,9 @@ from license_plate_reader import LicensePlateReader
 
 CLASSIFIER_MODEL_PATH = os.path.join('.', 'svm_model.pkl')
 CROPPER_MODEL_PATH = os.path.join(".", "model.pt")
-PATH_TO_ORIGINAL_IMAGE_DIRECTORY = os.path.join("..", "mat_españolas")
+PATH_TO_ORIGINAL_IMAGE_DIRECTORY = os.path.join("..", "Lateral")
 PATH_TO_RESULT_IMAGE_DIRECTORY = os.path.join(
-    "..", "Results", "Final", "mat_españolas")
+    "..", "Results", "Final", "Lateral")
 THRESHOLD = 127
 WINDOW_SIZE = 1000
 
@@ -82,72 +82,5 @@ def main():
     return list_of_files, results
 
 
-def test(context):
-
-    list_files = context[0]
-
-    results = context[1]
-
-    cum_punt = {
-        'cropped_license_plates': 0,
-        'binarised_license_plates': 0,
-        'segmented_characters': 0,
-        'license_plates': 0
-    }
-
-    failed = set()
-
-    for file_name, cropped_license_plate in results['cropped_license_plates'].items():
-        if (cropped_license_plate != 0).all:
-            cum_punt['cropped_license_plates'] += 1
-        else:
-            failed.add(file_name)
-
-    for file_name, binarised_license_plate in results['binarised_license_plates'].items():
-        if (binarised_license_plate != 0).all:
-            cum_punt['binarised_license_plates'] += 1
-        else:
-            failed.add(file_name)
-
-    for file_name, segmented_characters in results['segmented_characters'].items():
-        if len(segmented_characters) == 7:
-            cum_punt['segmented_characters'] += 1
-        else:
-            failed.add(file_name)
-
-    for file_name, license_plate in results['license_plates'].items():
-        if license_plate == file_name[:7]:
-            cum_punt['license_plates'] += 1
-        else:
-            failed.add(file_name)
-
-    failed = list(failed)
-
-    scores = {
-        'abs_score': {part: punt / len(list_files)
-                      for part, punt in cum_punt.items()},
-        'rel_score': {
-            'cropped_license_plates': cum_punt['cropped_license_plates'] / len(list_files),
-            'binarised_license_plates': cum_punt['binarised_license_plates'] / cum_punt['cropped_license_plates'],
-            'segmented_characters': cum_punt['segmented_characters'] / cum_punt['binarised_license_plates'],
-            'license_plates': cum_punt['license_plates'] / cum_punt['segmented_characters']
-        }
-    }
-
-    if SAVE_RESULTS:
-        with open("result.dat", "a") as file:
-            file.write(f'{PATH_TO_ORIGINAL_IMAGE_DIRECTORY}: {scores}\n')
-
-        with open("failed.dat", "w") as file:
-            json.dump(failed, file)
-
-    for typ, punts in scores.items():
-        print(f'{typ}\n')
-        for score, punt in punts.items():
-            print(f'{score}: {punt: %}\n')
-
-    return scores
-
-
 if __name__ == "__main__":
-    test(main())
+    main()
